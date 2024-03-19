@@ -1,0 +1,47 @@
+CXX=g++
+CXXFLAGS= -Wall -std=c++11 -g -O3
+EXEC_FILES= coord ensemble animal grille population jeu test main
+
+all: $(EXEC_FILES)
+# Regle generique
+%.o: %.cpp
+	$(CXX) -o $@ -c $< $(CXXFLAGS)
+    
+coord: coord.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+ensemble: ensemble.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+animal: animal.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+population: population.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+grille: grille.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+jeu: jeu.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+test: test.o coord.o ensemble.o animal.o population.o grille.o jeu.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+main: main.o test.o coord.o ensemble.o animal.o population.o grille.o jeu.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+    
+coord.o : coord.hpp
+test.o : coord.hpp ensemble.hpp animal.hpp population.hpp grille.hpp jeu.hpp
+ensemble.o : ensemble.hpp
+animal.o : animal.hpp
+population.o : population.hpp
+grille.o : grille.hpp
+jeu.o : jeu.hpp
+main.o : coord.hpp ensemble.hpp animal.hpp population.hpp grille.hpp jeu.hpp
+
+check: test
+	./test
+
+clean:
+	rm -f *.o $(EXEC_FILES)
